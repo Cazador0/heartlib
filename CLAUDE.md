@@ -45,6 +45,14 @@ on explicit user request.
 9. **Hardware budget: 24 GB unified RAM.** No solution may assume models
    co-resident in memory beyond this budget. Sequential staging with
    disk-backed intermediates is the norm.
+10. **Claude executes the shell, not the user.** Any command-line work that
+    advances the task (install, test, lint, run scripts, git, gh) is
+    executed by Claude in-session via the Bash tool. Do not produce
+    "now run X" handoffs; either run the command and report results, or
+    state precisely why you cannot (missing credential, destructive
+    operation needing confirmation, hardware not present in the session
+    sandbox) and ask. Risky / irreversible commands still require
+    explicit user approval before execution.
 
 ## Workflow Defaults
 
