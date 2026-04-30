@@ -32,6 +32,11 @@ dependencies = [
     "modelscope==1.33.0",
     "soundfile"
 ]
+urls = { "homepage" = "https://heartmula.github.io/" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent"
+]
 
 [project.optional-dependencies]
 research = [
@@ -40,12 +45,6 @@ research = [
     "matplotlib>=3.8",
     "pyloudnorm>=0.1",
     "pytest>=8.0",
-]
-
-urls = { "homepage" = "https://heartmula.github.io/" }
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent"
 ]
 
 [tool.setuptools]
