@@ -9,15 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
-import torch
-import torchaudio
-from demucs.apply import apply_model
-from demucs.pretrained import get_model
 
 EPS = 1e-9
 
@@ -35,12 +27,17 @@ def si_sdr(reference: np.ndarray, estimate: np.ndarray) -> float:
 
 
 def rms_dbfs(audio: np.ndarray) -> float:
-    rms = float(np.sqrt(np.mean(np.asarray(audio, dtype=np.float64) ** 2) + EPS))
+    rms = float(np.sqrt(np.mean(np.asarray(audio, dtype=np.float64) ** 2)))
     return float(20.0 * np.log10(rms + EPS))
 
 
 def vocal_leakage_dbfs(audio_path: Path, *, device: str | None = None) -> float:
     """Re-run Demucs on the output; return RMS of vocal stem in dBFS."""
+    import torch
+    import torchaudio
+    from demucs.apply import apply_model
+    from demucs.pretrained import get_model
+
     if device is None:
         device = "mps" if torch.backends.mps.is_available() else "cpu"
     model = get_model("htdemucs_ft").to(device).eval()
@@ -61,6 +58,13 @@ def vocal_leakage_dbfs(audio_path: Path, *, device: str | None = None) -> float:
 
 
 def spectrogram_png(audio_path: Path, png_path: Path, *, n_mels: int = 128) -> Path:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import torch
+    import torchaudio
+
     wav, sr = torchaudio.load(str(audio_path))
     mono = wav.mean(dim=0, keepdim=True)
     mel = torchaudio.transforms.MelSpectrogram(
